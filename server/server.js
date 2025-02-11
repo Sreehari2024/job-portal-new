@@ -14,7 +14,7 @@ const app = express();
 
 // connect to database
 
-
+await connectDB()
 
 // middleware
 
