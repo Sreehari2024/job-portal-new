@@ -1,0 +1,5 @@
+
+<svg width="200" height="50" xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <rect width="200" height="50" fill="white"/>
+    <text x="10" y="30" font-family="Arial" font-size="24" fill="blue">TechHire</text>
+</svg>
