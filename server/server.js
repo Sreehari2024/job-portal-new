@@ -14,7 +14,7 @@ const app = express();
 
 // connect to database
 
-await connectDB()
+
 
 // middleware
 
@@ -28,7 +28,7 @@ app.get("/debug-sentry", function mainHandler(req, res) {
   });
   
 
-  app.post('/weebhooks',clerkWebhook)
+  app.post('/webhooks',clerkWebhook)
 
 // port
 const PORT = process.env.PORT || 5000;
