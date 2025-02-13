@@ -4,6 +4,8 @@ import { jobsData } from "../assets/assets";
 export const Appcontext = createContext();
 
 export const AppcontextProvider = (props) => {
+
+  const backendUrl = import.meta.env.VITE_BACKEND_URL
   const [searchFilter, setSearchFilter] = useState({
     title: '',
     location: ''
@@ -14,6 +16,9 @@ export const AppcontextProvider = (props) => {
   const  [jobs,setJobs]=useState([])
 
   const [showRecruiterLogin,setShowRecruiterLogin]=useState(false)
+
+  const [companyToken,setCompanyToken]=useState(null)
+  const [companyData,setCompanyData]=useState(null)
 
   //function to fetch jobs
 
@@ -33,7 +38,13 @@ export const AppcontextProvider = (props) => {
     jobs,
     setJobs,
     showRecruiterLogin,
-    setShowRecruiterLogin
+    setShowRecruiterLogin,
+    companyToken,
+    setCompanyToken,
+    companyData,
+    setCompanyData,
+    backendUrl
+
 
   };
 
