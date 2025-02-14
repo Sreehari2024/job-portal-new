@@ -10,8 +10,9 @@ import connectCloudinary from './config/cloudinary.js';
 import jobRoutes from './routes/jobRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import { clerkMiddleware} from '@clerk/express'
+import dotenv from 'dotenv';
 
-
+dotenv.config()
 // initialize express
 
 const app = express();
@@ -26,6 +27,7 @@ await connectCloudinary()
 app.use(cors());
 app.use(express.json());
 app.use(clerkMiddleware());
+
 
 
 // routes
