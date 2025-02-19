@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Appcontext } from '../context/Appcontext'
 import { assets } from '../assets/assets' 
 import Loading from '../components/Loading'
@@ -10,9 +10,12 @@ import JobCard from '../components/JobCard'
 import Footer from '../components/Footer'
 import axios from 'axios'
 
+import { toast } from 'react-toastify'
+
 
 const Applyjob = () => {
   const {id} =useParams()
+
 
   const [JobData,setJobdata]=useState(null)
 
@@ -45,10 +48,19 @@ const Applyjob = () => {
           return toast.error('Upload resume to apply')
            
         }
+        const response=await axios.post(backendUrl+`/api/apply`,{
+          userId:userData._id,
+          jobId:id,
+        })
+        if (response.data.success) {
+          toast.success('Application submitted successfully');
+        }else{
+          toast.error(response.data.message);
+        }
     } catch (error) {
-      
-    }
+      toast.error('Failed to apply.Please try again')
   }
+}
   useEffect(()=>{
     
       fetchJob()
