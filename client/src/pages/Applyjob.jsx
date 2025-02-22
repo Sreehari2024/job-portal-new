@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import {useNavigate, useParams } from 'react-router-dom'
 import { Appcontext } from '../context/Appcontext'
 import { assets } from '../assets/assets' 
 import Loading from '../components/Loading'
@@ -15,6 +15,8 @@ import { toast } from 'react-toastify'
 
 const Applyjob = () => {
   const {id} =useParams()
+
+  const navigate=useNavigate()
 
 
   const [JobData,setJobdata]=useState(null)
@@ -45,6 +47,7 @@ const Applyjob = () => {
         
       }
         if (!userData.resume) {
+          navigate("/applications")
           return toast.error('Upload resume to apply')
            
         }

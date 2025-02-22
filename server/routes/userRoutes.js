@@ -3,11 +3,17 @@ import {
   applyForJob, 
   getUserData, 
   getUserJobApplications, 
-  updateUserResume 
+  updateUserResume,
+  createUserIfNotExists,
+  createUser 
 } from '../controllers/userController.js';
 import upload from '../config/multer.js';
 
+
 const router = express.Router();
+router.post("/not-exist",createUserIfNotExists)
+
+router.post("/create",createUser)
 
 // get user data
 router.get('/user', getUserData);
@@ -22,16 +28,16 @@ router.get('/applications', getUserJobApplications);
 router.post('/update-resume', upload.single('resume'), updateUserResume);
 
 // Create user endpoint
-router.post('/create', async (req, res) => {
+router.post('/create/webhook', async (req, res) => {
   try {
-    const { clerkUserId, email } = req.body;
+    const { id, email,name,resume,Image } = req.body.data;
     
     // Your logic to create a user (e.g., inserting into the database)
     // For demonstration, we're just returning a success message.
     return res.status(201).json({
       success: true,
       message: 'User created successfully',
-      user: { clerkUserId, email }
+      user: { clerkUserId, email,name,resume,Image }
     });
   } catch (error) {
     console.error("Error creating user:", error);

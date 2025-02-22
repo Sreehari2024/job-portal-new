@@ -4,16 +4,38 @@ import  User  from "../models/User.js"
 import { v2 as cloudinary} from "cloudinary"
 
 
+export const createUser = async (req, res) => {
+    try {
+        const { clerkUserId, name, email } = req.body;
 
+        // Check if user already exists
+        let user = await User.findOne({ clerkUserId });
+
+        if (!user) {
+            user = new User({
+                clerkUserId,
+                name,
+                email,
+                resume: "",
+                image: ""
+            });
+            await user.save();
+        }
+
+        res.status(201).json({ message: "User created successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error creating user" });
+    }
+};
 // get userdata
 
 
 export const getUserData = async (req,res) => {
-
+    try {
     const userId= req.auth.userId
 
-    try {
-        const user = await User.findById(userId)
+  
+        const user = await User.findOne({clerkUserId:userId})
 
         if(!user){
             return res.json({success:false,message:"User not found"})
@@ -94,8 +116,13 @@ export const updateUserResume= async (req,res) => {
 
             const resumeFile=req.resumeFile
 
-            const userData=await User.findById(userId);
+            const userData=await User.findOne({clerkUserId:userId});
+            if (!userData) {
+                return res.json({ success: false, message: "User not found" });
+            }
 
+
+            
             if(resumeFile){
                 const resumeUpload = await cloudinary.uploader.upload(resumeFile.path)
                     userData.resume=resumeUpload.secure_url;
@@ -110,3 +137,21 @@ export const updateUserResume= async (req,res) => {
             res.json({success:false,message:error.message})
         }
 }
+
+
+export const createUserIfNotExists = async (req, res) => {
+    try {
+        const {clerkUserId,email,name,resume,Image}=req.body;
+
+    let user = await User.findOne({ clerkUserId });
+    if (!user) {
+        user = new User({ clerkUserId, email, name, resume,Image });
+        await user.save();
+      }
+  
+      res.status(200).json({ success: true, user });
+    } catch (error) {
+      res.status(500).json({ success: false, message: error.message });
+    }
+  };
+

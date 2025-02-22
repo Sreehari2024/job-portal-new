@@ -24,7 +24,7 @@ export const AppcontextProvider = (props) => {
   const [userData, setUserData] = useState(null);
   const [userApplications, setUserApplications] = useState([]);
 
-  // 1. Fetch all jobs
+  // Fetch all jobs
   const fetchJobs = async () => {
     try {
       const { data } = await axios.get(`${backendUrl}/api/jobs`);
@@ -39,7 +39,7 @@ export const AppcontextProvider = (props) => {
     }
   };
 
-  // 2. Fetch company data (if companyToken exists)
+  // Fetch company data (if companyToken exists)
   const fetchCompanyData = useCallback(async () => {
     if (!companyToken) return;
     try {
@@ -58,7 +58,7 @@ export const AppcontextProvider = (props) => {
     }
   }, [companyToken, backendUrl]);
 
-  // 3. **Fetch user data** from your backend using Clerk's token
+  // Fetch user data from your backend using Clerk's token
   const fetchUserData = useCallback(async () => {
     if (!user) return; // no user from Clerk yet
     try {
@@ -84,14 +84,14 @@ export const AppcontextProvider = (props) => {
     }
   }, [user, getToken, backendUrl]);
 
-  // 4. Call `fetchUserData` once Clerk’s user is available
+  //  Call `fetchUserData` once Clerk’s user is available
   useEffect(() => {
     if (user) {
       fetchUserData();
     }
   }, [user, fetchUserData]);
 
-  // 5. Fetch all jobs on mount
+  // Fetch all jobs on mount
   useEffect(() => {
     fetchJobs();
     const storedCompanyToken = localStorage.getItem("companyToken");
@@ -100,31 +100,33 @@ export const AppcontextProvider = (props) => {
     }
   }, []);
 
-  // 6. Fetch company data if we have a company token
+  // Fetch company data if we have a company token
   useEffect(() => {
     if (companyToken) {
       fetchCompanyData();
     }
   }, [companyToken, fetchCompanyData]);
 
-  // 7. Create a user in your backend if Clerk’s user does not exist
+  // Create a user in your backend if Clerk’s user does not exist
   useEffect(() => {
     const createUserIfNotExists = async () => {
       if (!user?.id) return;
       try {
         const token = await getToken();
         if (!token) return;
-        await axios.post(
+       const response= await axios.post(
           `${backendUrl}/api/users/create`,
           {
             clerkUserId: user.id,
-            email: user.primaryEmailAddress.emailAddress,
+            email: user.primaryEmailAddress?.emailAddress,
+            name:user.fullName,
+            Image:user.imageUrl
           },
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        console.log("User creation response:",resizeBy.data);
-        if (res.data.success) {
+        console.log("User creation response:",response.data);
+        if (response.data.success) {
           fetchUserData();
         }
         
@@ -133,9 +135,9 @@ export const AppcontextProvider = (props) => {
       }
     };
     createUserIfNotExists();
-  }, [user, getToken, backendUrl]);
+  }, [user, getToken, backendUrl,fetchUserData]);
 
-  // 8. Provide context values to child components
+  // Provide context values to child components
   const value = {
     searchFilter,
     setSearchFilter,
